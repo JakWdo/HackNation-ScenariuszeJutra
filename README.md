@@ -20,6 +20,5 @@ MSZ | HackNation 2025
 
 ```bash
 pip install -r requirements.txt
-cp .env.example .env  # uzupełnij klucze
 uvicorn main:app --reload
 ```
