@@ -102,15 +102,40 @@ class FullReport(BaseModel):
 class AnalyzeRequest(BaseModel):
     """Request do analizy."""
     query: str = Field(..., min_length=3, description="Zapytanie do analizy")
-    regions: List[RegionCode] = Field(default=[RegionCode.EU])
-    sources: List[SourceCode] = Field(default_factory=list)
+    regions: List[str] = Field(default=["europe"], description="Regiony: europe, asia, africa, americas, oceania lub EU, USA, NATO")
+    countries: List[str] = Field(default_factory=list, description="Kody krajów (ISO)")
+    sectors: List[str] = Field(default_factory=list, description="Sektory: security, trade, energy, diplomacy, etc.")
+    sources: List[str] = Field(default_factory=list)
+    weights: Dict[str, float] = Field(default_factory=dict)
+    timeframes: List[str] = Field(default=["12m", "36m"])
     include_synthesis: bool = True
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "query": "Analiza wpływu kryzysu...",
+                "regions": ["europe", "asia"],
+                "countries": ["DEU", "POL"],
+                "sectors": ["security", "trade"],
+                "weights": {"economy": 0.8},
+                "timeframes": ["12m"]
+            }
+        }
 
 
 class AnalyzeResponse(BaseModel):
     """Response z analizy."""
     session_id: str
     status: str = "processing"
+    message: str = "Analiza rozpoczęta"
+
+
+class SessionStatusResponse(BaseModel):
+    """Status sesji."""
+    session_id: str
+    status: str
+    created_at: str
+    query: str
 
 
 class StreamEvent(BaseModel):
@@ -119,6 +144,18 @@ class StreamEvent(BaseModel):
     agent: Optional[str] = None
     content: str
     timestamp: Optional[str] = None
+    
+    # Dodatkowe pola dla różnych typów zdarzeń
+    query: Optional[str] = None
+    docs: Optional[List[Dict[str, Any]]] = None
+    progress: Optional[float] = None
+    section: Optional[str] = None
+    timeframe: Optional[str] = None
+    variant: Optional[str] = None
+    title: Optional[str] = None
+    confidence: Optional[float] = None
+    session_id: Optional[str] = None
+    result: Optional[Dict[str, Any]] = None
 
 
 # === DOKUMENTY ===

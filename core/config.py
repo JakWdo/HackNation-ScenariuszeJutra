@@ -4,9 +4,6 @@ Konfiguracja aplikacji - settings, prompts, stałe.
 from typing import Optional
 from pydantic_settings import BaseSettings
 
-
-# === SETTINGS ===
-
 class Settings(BaseSettings):
     """Ustawienia aplikacji z .env"""
     gemini_api_key: Optional[str] = None
@@ -20,9 +17,6 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-
-
-# === STAŁE - REGIONY, KRAJE, ŹRÓDŁA ===
 
 REGIONS = {
     "EU": {"name": "Unia Europejska", "countries": ["DE", "FR", "PL"]},
@@ -51,10 +45,6 @@ SOURCES = {
     "CSIS": {"name": "CSIS", "type": "think_tank"},
     "DE_BMWK": {"name": "Niemieckie Ministerstwo Gospodarki", "type": "government"},
 }
-
-
-# === PROMPTS ===
-
 REGION_PROMPT = """Jesteś ekspertem ds. analizy geopolitycznej regionu {region}.
 
 Zadania:

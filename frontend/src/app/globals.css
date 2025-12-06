@@ -1,16 +1,537 @@
-/**
- * === TAILWIND CSS ===
- *
- * @tailwind base - resetuje style przeglądarki
- * @tailwind components - klasy komponentów Tailwind
- * @tailwind utilities - klasy utility (flex, p-4, text-red-500, etc.)
- */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Własne style globalne */
-body {
-  font-family: system-ui, -apple-system, sans-serif;
+/* ============================================
+   SCENARIUSZE JUTRA - DIPLOMATIC INTELLIGENCE
+   ============================================
+
+   Estetyka: "Diplomatic Intelligence Center"
+   - Elegancja dyplomatyczna (mapy, mosiądz, pergamin)
+   - Nowoczesny command center (NASA, Bloomberg)
+   - Wyrafinowany, profesjonalny, z charakterem
+*/
+
+/* === TYPOGRAFIA === */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@layer base {
+  :root {
+    /* === KOLORY GŁÓWNE === */
+
+    /* Tła - Głęboki granat (nocne niebo nad Bałtykiem) */
+    --color-bg-deep: #0a0f1c;
+    --color-bg-primary: #0f1628;
+    --color-bg-secondary: #151d33;
+    --color-bg-elevated: #1a2540;
+    --color-bg-surface: #1f2d4d;
+
+    /* Akcenty - Mosiądz i Bursztyn */
+    --color-brass: #D4A84B;
+    --color-brass-light: #E8C97D;
+    --color-brass-dark: #B08B3A;
+    --color-amber: #F59E0B;
+    --color-amber-glow: rgba(245, 158, 11, 0.15);
+
+    /* Akcent sekundarny - Bałtyk */
+    --color-baltic: #06B6D4;
+    --color-baltic-light: #22D3EE;
+    --color-baltic-dark: #0891B2;
+    --color-baltic-glow: rgba(6, 182, 212, 0.12);
+
+    /* Tekst */
+    --color-text-primary: #F1F5F9;
+    --color-text-secondary: #94A3B8;
+    --color-text-muted: #64748B;
+    --color-text-brass: #D4A84B;
+
+    /* Pergamin (dla raportów) */
+    --color-parchment: #FEF3C7;
+    --color-parchment-dark: #FDE68A;
+    --color-ink: #1C1917;
+
+    /* Status */
+    --color-success: #10B981;
+    --color-success-glow: rgba(16, 185, 129, 0.15);
+    --color-warning: #F59E0B;
+    --color-danger: #EF4444;
+    --color-danger-glow: rgba(239, 68, 68, 0.15);
+
+    /* Borders & Lines */
+    --color-border: rgba(212, 168, 75, 0.15);
+    --color-border-subtle: rgba(148, 163, 184, 0.1);
+    --color-border-brass: rgba(212, 168, 75, 0.3);
+
+    /* Shadows */
+    --shadow-glow-brass: 0 0 30px rgba(212, 168, 75, 0.1);
+    --shadow-glow-baltic: 0 0 30px rgba(6, 182, 212, 0.1);
+    --shadow-elevated: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+    /* Gradients */
+    --gradient-brass: linear-gradient(135deg, #D4A84B 0%, #B08B3A 100%);
+    --gradient-baltic: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+    --gradient-night: linear-gradient(180deg, #0a0f1c 0%, #151d33 100%);
+    --gradient-surface: linear-gradient(180deg, rgba(212, 168, 75, 0.03) 0%, transparent 100%);
+
+    /* Misc */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+
+    /* Compatibility with existing code */
+    --color-cyan: var(--color-baltic);
+    --color-gold: var(--color-brass);
+    --color-ocean: var(--color-bg-deep);
+    --background: 222 47% 7%;
+    --foreground: 210 40% 96%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-[var(--color-border-subtle)];
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-[var(--color-bg-deep)] text-[var(--color-text-primary)];
+    font-family: 'DM Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg-primary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-brass);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brass-dark);
+  }
+
+  /* Selection */
+  ::selection {
+    background: var(--color-brass);
+    color: var(--color-bg-deep);
+  }
+}
+
+@layer components {
+  /* === TYPOGRAFIA === */
+
+  .font-display {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+
+  .font-sans {
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  /* === KARTY I PANELE === */
+
+  .card-diplomatic {
+    @apply relative overflow-hidden;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-diplomatic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--gradient-brass);
+    opacity: 0.5;
+  }
+
+  .card-elevated {
+    @apply relative;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-brass);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .glass-panel {
+    background: rgba(15, 22, 40, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border);
+  }
+
+  /* Panel pergaminowy dla raportów */
+  .parchment-panel {
+    background: linear-gradient(
+      145deg,
+      var(--color-parchment) 0%,
+      #FEF9E7 50%,
+      var(--color-parchment-dark) 100%
+    );
+    color: var(--color-ink);
+    position: relative;
+  }
+
+  .parchment-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+  }
+
+  /* === PRZYCISKI === */
+
+  .btn-brass {
+    @apply relative px-6 py-2.5 font-semibold text-sm tracking-wide;
+    background: var(--gradient-brass);
+    color: var(--color-bg-deep);
+    border-radius: var(--radius-md);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(212, 168, 75, 0.3);
+  }
+
+  .btn-brass:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 168, 75, 0.4);
+  }
+
+  .btn-brass:active {
+    transform: translateY(0);
+  }
+
+  .btn-baltic {
+    @apply relative px-6 py-2.5 font-semibold text-sm tracking-wide;
+    background: var(--gradient-baltic);
+    color: white;
+    border-radius: var(--radius-md);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+  }
+
+  .btn-baltic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(6, 182, 212, 0.4);
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 text-sm font-medium;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+  }
+
+  .btn-ghost:hover {
+    color: var(--color-brass);
+    border-color: var(--color-border-brass);
+    background: var(--color-amber-glow);
+  }
+
+  /* === INPUTY === */
+
+  .input-diplomatic {
+    @apply w-full px-4 py-3 text-sm;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    transition: all 0.2s ease;
+  }
+
+  .input-diplomatic::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .input-diplomatic:focus {
+    outline: none;
+    border-color: var(--color-brass);
+    box-shadow: 0 0 0 3px var(--color-amber-glow);
+  }
+
+  /* === BADGE'Y === */
+
+  .badge-brass {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold;
+    background: var(--color-amber-glow);
+    color: var(--color-brass);
+    border: 1px solid var(--color-border-brass);
+    border-radius: 9999px;
+  }
+
+  .badge-baltic {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold;
+    background: var(--color-baltic-glow);
+    color: var(--color-baltic);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 9999px;
+  }
+
+  .badge-success {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold;
+    background: var(--color-success-glow);
+    color: var(--color-success);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 9999px;
+  }
+
+  .badge-danger {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold;
+    background: var(--color-danger-glow);
+    color: var(--color-danger);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 9999px;
+  }
+
+  /* === SEPARATORY === */
+
+  .divider-brass {
+    @apply w-full h-px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--color-border-brass) 20%,
+      var(--color-brass) 50%,
+      var(--color-border-brass) 80%,
+      transparent 100%
+    );
+  }
+
+  .divider-subtle {
+    @apply w-full h-px;
+    background: var(--color-border-subtle);
+  }
+
+  /* === EFEKTY ŚWIETLNE === */
+
+  .glow-brass {
+    box-shadow: var(--shadow-glow-brass);
+  }
+
+  .glow-baltic {
+    box-shadow: var(--shadow-glow-baltic);
+  }
+
+  /* Efekt latarni morskiej */
+  .lighthouse-glow {
+    position: relative;
+  }
+
+  .lighthouse-glow::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle,
+      var(--color-amber-glow) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .lighthouse-glow:hover::after {
+    opacity: 1;
+  }
+
+  /* === ANIMACJE === */
+
+  @keyframes pulse-brass {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  @keyframes radar-sweep {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .animate-pulse-brass {
+    animation: pulse-brass 2s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--color-brass-light) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+
+  /* === DEKORACJE KARTOGRAFICZNE === */
+
+  .compass-rose {
+    @apply absolute w-16 h-16 opacity-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0L55 45H95L60 70L70 100L50 80L30 100L40 70L5 45H45L50 0Z' fill='%23D4A84B'/%3E%3C/svg%3E");
+  }
+
+  .grid-overlay {
+    background-image:
+      linear-gradient(var(--color-border-subtle) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  /* === STANY STATUSU === */
+
+  .status-indicator {
+    @apply w-2 h-2 rounded-full;
+  }
+
+  .status-active {
+    background: var(--color-success);
+    box-shadow: 0 0 8px var(--color-success);
+    animation: pulse-brass 1.5s ease-in-out infinite;
+  }
+
+  .status-processing {
+    background: var(--color-amber);
+    box-shadow: 0 0 8px var(--color-amber);
+    animation: pulse-brass 0.8s ease-in-out infinite;
+  }
+
+  .status-error {
+    background: var(--color-danger);
+    box-shadow: 0 0 8px var(--color-danger);
+  }
+
+  /* === PROGRESS BAR === */
+
+  .progress-bar {
+    @apply h-1.5 rounded-full overflow-hidden;
+    background: var(--color-bg-surface);
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full transition-all duration-500;
+    background: var(--gradient-brass);
+  }
+
+  /* === SKELETON LOADING === */
+
+  .skeleton {
+    @apply rounded;
+    background: linear-gradient(
+      90deg,
+      var(--color-bg-surface) 0%,
+      var(--color-bg-elevated) 50%,
+      var(--color-bg-surface) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* === TOOLTIP === */
+
+  .tooltip-diplomatic {
+    @apply px-3 py-2 text-xs font-medium rounded-lg;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-brass);
+    color: var(--color-text-primary);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  /* === TABS === */
+
+  .tab-diplomatic {
+    @apply relative px-4 py-2.5 text-sm font-medium transition-all;
+    color: var(--color-text-muted);
+  }
+
+  .tab-diplomatic:hover {
+    color: var(--color-text-secondary);
+  }
+
+  .tab-diplomatic.active {
+    color: var(--color-brass);
+  }
+
+  .tab-diplomatic.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gradient-brass);
+  }
+
+  /* === SEKCJA NAGŁÓWKOWA === */
+
+  .section-header {
+    @apply flex items-center gap-3 mb-4;
+  }
+
+  .section-header h2 {
+    @apply text-lg font-display font-semibold;
+    color: var(--color-text-primary);
+  }
+
+  .section-header::before {
+    content: '';
+    @apply w-1 h-6 rounded-full;
+    background: var(--gradient-brass);
+  }
+}
+
+@layer utilities {
+  /* Text colors */
+  .text-brass { color: var(--color-brass); }
+  .text-baltic { color: var(--color-baltic); }
+  .text-parchment { color: var(--color-parchment); }
+
+  /* Background colors */
+  .bg-deep { background: var(--color-bg-deep); }
+  .bg-primary { background: var(--color-bg-primary); }
+  .bg-secondary { background: var(--color-bg-secondary); }
+  .bg-elevated { background: var(--color-bg-elevated); }
+  .bg-surface { background: var(--color-bg-surface); }
+
+  /* Border colors */
+  .border-brass { border-color: var(--color-border-brass); }
+  .border-subtle { border-color: var(--color-border-subtle); }
 }

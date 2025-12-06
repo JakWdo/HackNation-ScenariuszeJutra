@@ -1,0 +1,161 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - heading "sedno" [level=1] [ref=e6]
+        - generic [ref=e7]: 20:44
+    - main [ref=e8]:
+      - complementary [ref=e9]:
+        - heading "parametry" [level=2] [ref=e11]
+        - generic [ref=e12]:
+          - generic [ref=e13]:
+            - button "Regiony" [ref=e14] [cursor=pointer]:
+              - generic [ref=e15]:
+                - img [ref=e16]
+                - generic [ref=e19]: Regiony
+              - img [ref=e20]
+            - generic [ref=e23]:
+              - generic [ref=e24] [cursor=pointer]:
+                - checkbox "Afryka 5 subregionów" [ref=e26]
+                - generic [ref=e29]:
+                  - generic [ref=e30]: Afryka
+                  - generic [ref=e31]: 5 subregionów
+              - generic [ref=e32] [cursor=pointer]:
+                - checkbox "Ameryki 4 subregionów" [ref=e34]
+                - generic [ref=e37]:
+                  - generic [ref=e38]: Ameryki
+                  - generic [ref=e39]: 4 subregionów
+              - generic [ref=e40] [cursor=pointer]:
+                - checkbox "Azja 5 subregionów" [ref=e42]
+                - generic [ref=e45]:
+                  - generic [ref=e46]: Azja
+                  - generic [ref=e47]: 5 subregionów
+              - generic [ref=e48] [cursor=pointer]:
+                - checkbox "Europa 4 subregionów" [ref=e50]
+                - generic [ref=e53]:
+                  - generic [ref=e54]: Europa
+                  - generic [ref=e55]: 4 subregionów
+              - generic [ref=e56] [cursor=pointer]:
+                - checkbox "Australia i Oceania 4 subregionów" [ref=e58]
+                - generic [ref=e61]:
+                  - generic [ref=e62]: Australia i Oceania
+                  - generic [ref=e63]: 4 subregionów
+          - button "Organizacje" [ref=e65] [cursor=pointer]:
+            - generic [ref=e66]:
+              - img [ref=e67]
+              - generic [ref=e71]: Organizacje
+            - img [ref=e72]
+          - generic [ref=e74]:
+            - button "Sektory" [ref=e75] [cursor=pointer]:
+              - generic [ref=e76]:
+                - img [ref=e77]
+                - generic [ref=e80]: Sektory
+              - img [ref=e81]
+            - generic [ref=e84]:
+              - generic [ref=e85]:
+                - generic [ref=e86]: Ekonomiczne
+                - generic [ref=e87] [cursor=pointer]:
+                  - checkbox "Handel międzynarodowy" [ref=e89]
+                  - generic [ref=e92]: Handel międzynarodowy
+                - generic [ref=e93] [cursor=pointer]:
+                  - checkbox "Finanse i bankowość" [ref=e95]
+                  - generic [ref=e98]: Finanse i bankowość
+                - generic [ref=e99] [cursor=pointer]:
+                  - checkbox "Energia i surowce" [ref=e101]
+                  - generic [ref=e104]: Energia i surowce
+                - generic [ref=e105] [cursor=pointer]:
+                  - checkbox "Technologie" [ref=e107]
+                  - generic [ref=e110]: Technologie
+              - generic [ref=e111]:
+                - generic [ref=e112]: Polityczne
+                - generic [ref=e113] [cursor=pointer]:
+                  - checkbox "Bezpieczeństwo" [ref=e115]
+                  - generic [ref=e118]: Bezpieczeństwo
+                - generic [ref=e119] [cursor=pointer]:
+                  - checkbox "Dyplomacja" [ref=e121]
+                  - generic [ref=e124]: Dyplomacja
+                - generic [ref=e125] [cursor=pointer]:
+                  - checkbox "Konflikty i napięcia" [ref=e127]
+                  - generic [ref=e130]: Konflikty i napięcia
+                - generic [ref=e131] [cursor=pointer]:
+                  - checkbox "Wybory i polityka wewnętrzna" [ref=e133]
+                  - generic [ref=e136]: Wybory i polityka wewnętrzna
+              - generic [ref=e137]:
+                - generic [ref=e138]: Społeczne
+                - generic [ref=e139] [cursor=pointer]:
+                  - checkbox "Demografia" [ref=e141]
+                  - generic [ref=e144]: Demografia
+                - generic [ref=e145] [cursor=pointer]:
+                  - checkbox "Migracje" [ref=e147]
+                  - generic [ref=e150]: Migracje
+                - generic [ref=e151] [cursor=pointer]:
+                  - checkbox "Zdrowie publiczne" [ref=e153]
+                  - generic [ref=e156]: Zdrowie publiczne
+                - generic [ref=e157] [cursor=pointer]:
+                  - checkbox "Edukacja i nauka" [ref=e159]
+                  - generic [ref=e162]: Edukacja i nauka
+          - button "Wagi" [ref=e164] [cursor=pointer]:
+            - generic [ref=e165]:
+              - img [ref=e166]
+              - generic [ref=e168]: Wagi
+            - img [ref=e169]
+        - button "Uruchom analizę" [disabled] [ref=e172]:
+          - img [ref=e173]
+          - generic [ref=e175]: Uruchom analizę
+      - generic [ref=e176]:
+        - generic [ref=e178]:
+          - button "Reset" [ref=e180] [cursor=pointer]:
+            - img [ref=e181]
+            - generic [ref=e184]: Reset
+          - generic [ref=e185]:
+            - button [ref=e186] [cursor=pointer]:
+              - img [ref=e187]
+            - button [ref=e188] [cursor=pointer]:
+              - img [ref=e189]
+          - img [ref=e190]
+          - generic [ref=e373]:
+            - generic [ref=e374]: Nawigacja
+            - generic [ref=e375]:
+              - generic [ref=e376]: Kliknij → Wybierz
+              - generic [ref=e377]: "|"
+              - generic [ref=e378]: Scroll → Zoom
+        - generic [ref=e380]:
+          - generic [ref=e381]:
+            - generic [ref=e384]: Zapytanie ambasadora
+            - generic [ref=e385]: Enter = wyślij • Shift+Enter = nowa linia
+          - generic [ref=e386]:
+            - textbox "Zadaj pytanie analityczne o wybrane regiony..." [ref=e387]
+            - generic [ref=e388]:
+              - button "Dodaj załącznik" [ref=e389] [cursor=pointer]:
+                - img [ref=e390]
+              - button [disabled] [ref=e392]:
+                - img [ref=e393]
+          - generic [ref=e396]:
+            - button "Analiza sytuacji w regionie" [ref=e397] [cursor=pointer]:
+              - img [ref=e398]
+              - text: Analiza sytuacji w regionie
+            - button "Prognoza konfliktów" [ref=e400] [cursor=pointer]:
+              - img [ref=e401]
+              - text: Prognoza konfliktów
+            - button "Wpływ sankcji" [ref=e403] [cursor=pointer]:
+              - img [ref=e404]
+              - text: Wpływ sankcji
+            - button "Relacje bilateralne" [ref=e406] [cursor=pointer]:
+              - img [ref=e407]
+              - text: Relacje bilateralne
+      - generic [ref=e410]:
+        - generic [ref=e411]:
+          - generic [ref=e412]:
+            - img [ref=e413]
+            - generic [ref=e416]: Chain of Thought
+          - generic [ref=e417]: 0 kroków
+        - generic [ref=e419]:
+          - img [ref=e421]
+          - paragraph [ref=e424]:
+            - text: Rozpocznij analizę, aby zobaczyć
+            - text: rozumowanie agentów
+  - alert [ref=e425]
+```
