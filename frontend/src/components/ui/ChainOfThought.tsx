@@ -26,6 +26,8 @@ import {
   Cpu
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { CredibilityScore, CredibilityLevel } from '@/types/schemas';
+import { SourceCredibilityPanel } from './SourceCredibilityPanel';
 
 // Typy dla kroków myślenia
 export interface ThoughtStep {
@@ -35,7 +37,13 @@ export interface ThoughtStep {
   status: 'thinking' | 'searching' | 'analyzing' | 'complete' | 'error';
   title: string;
   content: string;
-  documents?: { title: string; relevance: number }[];
+  documents?: { 
+    title: string; 
+    relevance: number;
+    source: string;
+    url?: string | null;
+    credibility?: CredibilityScore | null;
+  }[];
   children?: ThoughtStep[];
   timestamp: Date;
 }
@@ -351,25 +359,38 @@ export default function ChainOfThought({
                       <Search className="w-3 h-3" />
                       Analizowane źródła
                     </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 gap-3">
                       {selectedStep.documents.map((doc, idx) => (
                         <div 
                           key={idx}
-                          className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg hover:border-blue-300 transition-colors group"
+                          className="flex flex-col p-3 bg-white border border-slate-200 rounded-lg hover:border-blue-300 transition-colors group"
                         >
-                          <div className="flex items-center gap-3 min-w-0">
-                            <FileText className="w-4 h-4 text-slate-400 group-hover:text-blue-500" />
-                            <span className="text-sm font-medium text-slate-700 truncate">
-                              {doc.title}
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <FileText className="w-4 h-4 text-slate-400 group-hover:text-blue-500" />
+                              <div className="flex flex-col min-w-0">
+                                <span className="text-sm font-medium text-slate-700 truncate" title={doc.title}>
+                                  {doc.title}
+                                </span>
+                                <span className="text-xs text-slate-500 truncate">
+                                  {doc.source} {doc.url ? `• ${doc.url}` : ''}
+                                </span>
+                              </div>
+                            </div>
+                            <span className={cn(
+                              "text-xs font-bold px-2 py-0.5 rounded",
+                              doc.relevance > 0.8 ? "bg-emerald-100 text-emerald-700" : 
+                              doc.relevance > 0.5 ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600"
+                            )}>
+                              {Math.round(doc.relevance * 100)}%
                             </span>
                           </div>
-                          <span className={cn(
-                            "text-xs font-bold px-2 py-0.5 rounded",
-                            doc.relevance > 0.8 ? "bg-emerald-100 text-emerald-700" : 
-                            doc.relevance > 0.5 ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600"
-                          )}>
-                            {Math.round(doc.relevance * 100)}%
-                          </span>
+                          
+                          {doc.credibility && (
+                            <div className="mt-2">
+                              <SourceCredibilityPanel credibility={doc.credibility} compact={true} />
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>

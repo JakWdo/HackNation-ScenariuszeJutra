@@ -175,7 +175,9 @@ async def emit_documents(emit: Callable, agent: str, docs: list, query: str = ""
             {
                 "title": doc.get("title", doc.get("content", "")[:50]),
                 "source": doc.get("source", "unknown"),
-                "relevance": doc.get("relevance", 0.0)
+                "relevance": doc.get("relevance", 0.0),
+                "url": doc.get("url"),
+                "credibility": doc.get("credibility")
             }
             for doc in docs[:10]  # Max 10 w UI
         ]

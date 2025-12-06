@@ -80,6 +80,9 @@ export function useAnalysis(): UseAnalysisReturn {
           documents: event.docs?.map((d) => ({
             title: d.title,
             relevance: d.relevance,
+            source: d.source || 'unknown',
+            url: d.url,
+            credibility: d.credibility,
           })),
         };
 
