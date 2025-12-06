@@ -1,151 +1,184 @@
-import os
+"""
+Web Search Engine - wyszukiwanie w internecie.
+
+Używa DuckDuckGo do wyszukiwania informacji w czasie rzeczywistym.
+Przetwarzanie dokumentów i baza wektorowa przeniesione do services/rag/.
+"""
 from typing import List
-import hashlib
-import chromadb
+import logging
+import re
 
 from langchain_community.tools import DuckDuckGoSearchRun
-from langchain_core.tools import tool
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+logger = logging.getLogger(__name__)
+
 
 class WebSearchEngine:
+    """
+    Serwis wyszukiwania w internecie.
+
+    Używa DuckDuckGo Search API do wyszukiwania informacji
+    w czasie rzeczywistym.
+    """
+
     def __init__(self):
+        """Inicjalizuje WebSearchEngine z DuckDuckGo."""
         self.search = DuckDuckGoSearchRun()
+        logger.info("WebSearchEngine zainicjalizowany (DuckDuckGo)")
 
     def search_web(self, query: str) -> str:
-        return self.search.run(query)
+        """
+        Wykonuje wyszukiwanie w internecie.
+
+        Args:
+            query: Zapytanie tekstowe
+
+        Returns:
+            Tekst z wynikami wyszukiwania
+        """
+        if not query or not query.strip():
+            logger.warning("Próba wyszukiwania z pustym zapytaniem")
+            return ""
+
+        try:
+            result = self.search.run(query)
+            logger.debug(f"Web search dla '{query[:50]}...': {len(result)} znaków")
+            return result
+        except Exception as e:
+            logger.error(f"Błąd web search: {e}")
+            return ""
 
     def search_web_for_rag(self, query: str) -> List[str]:
         """
-        Searches the web for the given query and returns a list of relevant snippets
-        suitable for a RAG system.
+        Wyszukuje w internecie i zwraca listę fragmentów dla RAG.
+
+        Args:
+            query: Zapytanie tekstowe
+
+        Returns:
+            Lista fragmentów tekstu z wyników wyszukiwania
         """
-        # DuckDuckGoSearchRun returns a single string,
-        # we might want to split it into more manageable chunks
-        # or integrate with a tool that returns structured results.
-        # For simplicity, we'll return the full result as a single item in a list.
-        result = self.search.run(query)
-        # In a real RAG system, you might want to parse this result
-        # into multiple, smaller, semantically coherent chunks.
-        # For now, we treat the entire result as one "document" or snippet.
-        return [result]
+        result = self.search_web(query)
 
-class TextProcessor: 
-    def __init__(self, content):
-        self.content = content
+        if not result:
+            return []
 
-        self.chunks = None
-        self.embeddings = None
+        # Podziel wynik na fragmenty (po podwójnych newline'ach lub długich fragmentach)
+        fragments = self._split_into_fragments(result)
 
-    def chunk_document(self, document_content: str, document_id: str = None):
+        return fragments
+
+    def get_search_urls(self, query: str) -> List[str]:
         """
-        Chunks a document using the provided text splitter and adds metadata.
-        Applies a simple contextual chunking strategy by ensuring each chunk
-        retains some context from the original document.
+        Wyszukuje i ekstrahuje URL-e z wyników.
+
+        Args:
+            query: Zapytanie tekstowe
+
+        Returns:
+            Lista znalezionych URL-i
         """
-        chunks = self.text_splitter.split_text(document_content)
+        result = self.search_web(query)
 
-        def _stable_id(text: str, length: int = 12) -> str:
-            """Generates a stable, short ID for a given text."""
-            return hashlib.sha1(text.encode("utf-8")).hexdigest()[:length]
-        
-        processed_chunks = []
-        for i, chunk_text in enumerate(chunks):
-            chunk_metadata = {
-                "chunk_id": f"{document_id or _stable_id(document_content)}-chunk-{i}",
-                "document_id": document_id or _stable_id(document_content),
-                "chunk_index": i,
-                "text_length": len(chunk_text),
-            }
-            # Add context from previous chunk if available (simple strategy)
-            if i > 0:
-                previous_chunk_text = chunks[i-1]
-                chunk_metadata["has_previous_context"] = True
+        if not result:
+            return []
 
-            processed_chunks.append(
-                {"document_id": document_id, "text": chunk_text, "metadata": chunk_metadata}
-            )
-        
-        self.processed_chunks = processed_chunks
+        # Regex do znajdowania URL-i
+        url_pattern = r'https?://[^\s<>"\']+|www\.[^\s<>"\']+'
+        urls = re.findall(url_pattern, result)
 
-    def embedder(self):
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
-        for chunk in self.processed_chunks['text']:
-            embeddings.embed_query(chunk)
-
-    def vector_store(self):
-        client = chromadb.Client()
-        collection = client.create_collection("") # ustawic specyficzna nazwe
-
-        collection.add(
-            documents=[doc_id for doc_id in self.processed_chunks['document_id']], 
-            metadatas=[{"source": metadata for _, metadata in self.processed_chunks['metadata'].items()}], 
-            ids=[], 
-        )
-
-        self.collection = collection
-
-class DataProcessor: 
-    def __init__(self, llm):
-        self.llm = llm 
-        self.web_search_engine = WebSearchEngine()
-
-    def run_search_engine(self, search_query: str):
-        docs = self.web_search_engine.search_web(search_query)
-        
-        pass
-
-
-if __name__ == '__main__':
-    # Example usage
-    web_search = WebSearchEngine()
-
-    print("--- Testing search_web ---")
-    query_general = "current weather in London"
-    general_result = web_search.search_web(query_general)
-    print(f"Query: {query_general}\nResult: {general_result[:500]}...")
-
-    print("\n--- Testing search_web_for_rag ---")
-    query_rag = "latest advancements in AI for medical diagnosis"
-    rag_results = web_search.search_web_for_rag(query_rag)
-    print(f"Query: {query_rag}")
-    for i, snippet in enumerate(rag_results):
-        print(f"Snippet {i+1}:\n{snippet[:500]}...")
-    
-    def get_search_urls(query: str) -> List[str]:
-        """
-        Searches the web for the given query and returns a list of relevant URLs.
-        This tool is useful when the user explicitly asks for links or sources related to a topic.
-        """
-        # DuckDuckGoSearchRun doesn't directly expose a method to get just URLs
-        # without content. We'll simulate this by performing a search and
-        # attempting to extract URLs from the result string.
-        # This is a basic implementation and might not be exhaustive or perfect.
-        result = web_search.search_web(query)
-        
-        # A simple regex to find URLs in the search result string
-        import re
-        urls = re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', result)
-        print(urls)
-        
-        # Filter out duplicates and ensure they are valid-looking URLs
+        # Deduplikacja i walidacja
         unique_urls = []
         for url in urls:
-            # Basic validation: check if it looks like a proper URL start
-            if url.startswith("http") or url.startswith("www."):
+            # Wyczyść URL z trailing znaków
+            url = url.rstrip('.,;:!?)')
+
+            if url.startswith(("http://", "https://", "www.")):
                 if url not in unique_urls:
                     unique_urls.append(url)
-        
+
         return unique_urls
 
+    def _split_into_fragments(
+        self,
+        text: str,
+        max_fragment_length: int = 1000
+    ) -> List[str]:
+        """
+        Dzieli tekst na fragmenty.
+
+        Args:
+            text: Tekst do podziału
+            max_fragment_length: Maksymalna długość fragmentu
+
+        Returns:
+            Lista fragmentów
+        """
+        if not text:
+            return []
+
+        # Najpierw podziel po podwójnych newline'ach
+        paragraphs = text.split('\n\n')
+
+        fragments = []
+        current_fragment = ""
+
+        for para in paragraphs:
+            para = para.strip()
+            if not para:
+                continue
+
+            if len(current_fragment) + len(para) + 2 <= max_fragment_length:
+                if current_fragment:
+                    current_fragment += "\n\n"
+                current_fragment += para
+            else:
+                if current_fragment:
+                    fragments.append(current_fragment)
+                current_fragment = para
+
+        if current_fragment:
+            fragments.append(current_fragment)
+
+        # Jeśli brak fragmentów, zwróć cały tekst jako jeden fragment
+        if not fragments:
+            fragments = [text[:max_fragment_length]]
+
+        return fragments
+
+
+# Singleton instancja
+_web_search_engine: WebSearchEngine = None
+
+
+def get_web_search_engine() -> WebSearchEngine:
+    """Zwraca singleton instancję WebSearchEngine."""
+    global _web_search_engine
+    if _web_search_engine is None:
+        _web_search_engine = WebSearchEngine()
+    return _web_search_engine
+
+
+# Dla kompatybilności wstecznej
+if __name__ == '__main__':
+    # Test
+    engine = WebSearchEngine()
+
+    print("--- Testing search_web ---")
+    query = "current weather in London"
+    result = engine.search_web(query)
+    print(f"Query: {query}\nResult: {result[:500]}...")
+
+    print("\n--- Testing search_web_for_rag ---")
+    query = "latest AI advancements 2024"
+    fragments = engine.search_web_for_rag(query)
+    print(f"Query: {query}")
+    for i, fragment in enumerate(fragments[:3]):
+        print(f"Fragment {i + 1}:\n{fragment[:300]}...")
+
     print("\n--- Testing get_search_urls ---")
-    query_urls = "best AI research papers 2023"
-    url_results = get_search_urls(query_urls)
-    print(f"Query: {query_urls}")
-    if url_results:
-        for i, url in enumerate(url_results[:5]): # Print up to 5 URLs
-            print(f"URL {i+1}: {url}")
-    else:
-        print("No URLs found.")
-
-
+    query = "best AI research papers 2024"
+    urls = engine.get_search_urls(query)
+    print(f"Query: {query}")
+    for i, url in enumerate(urls[:5]):
+        print(f"URL {i + 1}: {url}")

@@ -1,7 +1,3 @@
-## Pomysł
-
-CALA TRESC ZADANIA W /Users/jakubwdowicz/HackNation-ScenariuszeJutra/SCENARIUSZE_JUTRA.pdf
-
 ## DANE
 (Ciagle uzywany internet_search)
 1. Dane scrapowane z internetu (ministerstwa, raporty)
