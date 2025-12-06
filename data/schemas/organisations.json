@@ -1,0 +1,27 @@
+{ 
+    "date_from": "2021-01-01",
+    "ministries": {
+    "Germany": {
+      "country_code": "DE",
+      "language": "de",
+      "english_available": true,
+      "sources": [
+        {
+          "source_id": "DE_MAE",
+          "ministry_type": "foreign_affairs",
+          "name_en": "Federal Foreign Office",
+          "name_native": "Auswärtiges Amt",
+          "base_url": "https://www.auswaertiges-amt.de",
+          "english_url": "https://www.auswaertiges-amt.de/en",
+          "endpoints": {
+            "news": "/en/newsroom",
+            "press_releases": "/en/newsroom/news",
+            "speeches": "/en/newsroom/speeches",
+            "publications": "/en/publications"
+          },
+          "priority": "high",
+          "scraping_method": "static",
+          "active": true
+        }]
+    }}
+}
