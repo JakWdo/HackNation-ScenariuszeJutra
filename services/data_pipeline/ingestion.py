@@ -101,14 +101,18 @@ def _evaluate_source_credibility(source: str) -> CredibilityScore:
     Returns:
         CredibilityScore z oceną wiarygodności
     """
-    # Źródła o wysokiej wiarygodności (oficjalne)
+    # Źródła o wysokiej wiarygodności (oficjalne rządowe/międzynarodowe)
     high_credibility_sources = [
         "NATO",
         "EU_COMMISSION",
         "US_STATE",
         "UK_FCDO",
-        "UN"
+        "UN",
     ]
+
+    # Prefiksy ministerstw krajowych (oficjalne rządowe)
+    # Format: XX_YYY gdzie XX = kod kraju, np. DE_MAE, PL_MSZ, FR_MAE
+    ministry_prefixes = ["DE_", "PL_", "FR_", "UK_", "US_", "IT_", "ES_", "NL_", "BE_", "AT_"]
 
     # Źródła o średniej wiarygodności (think tanki)
     medium_credibility_sources = [
@@ -117,7 +121,10 @@ def _evaluate_source_credibility(source: str) -> CredibilityScore:
         "BROOKINGS"
     ]
 
-    if source in high_credibility_sources:
+    # Sprawdź czy to ministerstwo krajowe (wysoka wiarygodność)
+    is_ministry = any(source.startswith(prefix) for prefix in ministry_prefixes)
+
+    if source in high_credibility_sources or is_ministry:
         return CredibilityScore(
             score=0.95,
             level=CredibilityLevel.HIGH,

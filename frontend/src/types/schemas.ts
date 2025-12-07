@@ -129,6 +129,43 @@ export interface StreamEvent {
   tagged_info?: Array<Record<string, any>> | null;  // Lista InformationUnit
   reasoning_step?: Record<string, any> | null;       // ReasoningStep
   chart_data?: Record<string, any> | null;           // ChartData
+
+  // === NOWE: Rozbudowany Chain of Thought dla wyjaśnialności ===
+  // Typ: reasoning
+  step_title?: string | null;
+  reasoning?: string | null;
+  evidence?: Array<Record<string, any>> | null;
+  step_number?: number | null;
+  total_steps?: number | null;
+
+  // Typ: correlation
+  fact_a?: string | null;
+  fact_b?: string | null;
+  correlation_type?: 'positive' | 'negative' | 'causal' | 'temporal' | null;
+  strength?: number | null;
+  explanation?: string | null;
+  sources?: string[] | null;
+
+  // Typ: hypothesis
+  hypothesis?: string | null;
+  basis?: string | null;
+  testable_predictions?: string[] | null;
+
+  // Typ: evidence
+  hypothesis_ref?: string | null;
+  evidence_type?: 'supporting' | 'contradicting' | null;
+  impact?: string | null;
+  weight?: number | null;
+  source?: string | null;
+
+  // Typ: inference (KLUCZOWY dla wyjaśnialności)
+  historical_fact?: string | null;
+  historical_source?: string | null;
+  historical_date?: string | null;
+  prediction?: string | null;
+  prediction_timeframe?: string | null;
+  reasoning_chain?: string[] | null;
+  key_assumptions?: string[] | null;
 }
 
 // === DOKUMENTY ===
