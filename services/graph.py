@@ -323,3 +323,73 @@ async def run_analysis_streaming(
         "scenarios": scenarios,
         "expert_analyses": all_analyses
     }
+
+
+# ============================================================================
+# MVP FLOW - Uproszczony przepływ (2 kroki zamiast 4)
+# ============================================================================
+
+async def run_mvp_analysis(
+    query: str,
+    config: Dict[str, Any],
+    emit: EmitCallback
+) -> Dict[str, Any]:
+    """
+    Uproszczony flow MVP: analysis_node → scenarios_node
+
+    Zastępuje skomplikowany run_analysis_streaming() dwoma prostymi krokami:
+    1. analysis_node - RAG search + generowanie raportu
+    2. scenarios_node - 4 scenariusze równolegle
+
+    Args:
+        query: Zapytanie analityczne
+        config: Konfiguracja (regions, countries, sectors, timeframes)
+        emit: Callback do emitowania eventów SSE
+
+    Returns:
+        Dict z analysis_report, scenarios, retrieved_docs
+    """
+    from agents.nodes import analysis_node, scenarios_node
+
+    # Początkowy stan
+    state = {
+        "messages": [HumanMessage(content=query)],
+        "config": config,
+        "analysis_report": "",
+        "retrieved_docs": [],
+        "scenarios": []
+    }
+
+    # === KROK 1: Analiza ===
+    await emit({
+        "type": "thinking",
+        "agent": "system",
+        "content": f"Rozpoczynam analizę: {query[:100]}..."
+    })
+
+    try:
+        state = await analysis_node(state, emit)
+    except Exception as e:
+        await emit({
+            "type": "error",
+            "agent": "analysis",
+            "content": f"Błąd podczas analizy: {str(e)}"
+        })
+        raise
+
+    # === KROK 2: Scenariusze ===
+    try:
+        state = await scenarios_node(state, emit)
+    except Exception as e:
+        await emit({
+            "type": "error",
+            "agent": "scenarios",
+            "content": f"Błąd podczas generowania scenariuszy: {str(e)}"
+        })
+        raise
+
+    return {
+        "analysis_report": state.get("analysis_report", ""),
+        "scenarios": state.get("scenarios", []),
+        "retrieved_docs": state.get("retrieved_docs", [])
+    }

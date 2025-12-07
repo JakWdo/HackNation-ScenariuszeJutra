@@ -275,7 +275,7 @@ class HybridSearchService:
                         source_type="vector_store"
                     ))
 
-            logger.debug(f"Vector search: {len(results)} wyników dla '{query[:50]}...'")
+            logger.info(f"Vector search: {len(results)} wyników dla '{query[:50]}...', where={where}")
             return results
 
         except Exception as e:
@@ -324,7 +324,7 @@ class HybridSearchService:
                     source_type="web_search"
                 ))
 
-            logger.debug(f"Web search: {len(results)} wyników dla '{query[:50]}...'")
+            logger.info(f"Web search: {len(results)} wyników dla '{query[:50]}...'")
             return results
 
         except Exception as e:

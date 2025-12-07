@@ -18,7 +18,7 @@ from api.streaming import (
     emit_done,
     emit_error,
 )
-from services.graph import run_analysis_streaming
+from services.graph import run_mvp_analysis
 from core.config import REGIONS, COUNTRIES, SOURCES
 from schemas.schemas import AnalyzeRequest, AnalyzeResponse, SessionStatusResponse
 
@@ -78,10 +78,9 @@ async def run_analysis_background(session_id: str, query: str, config: dict):
 
     try:
         session.status = "running"
-        await emit_thinking(emit, "system", f"Rozpoczynam analizę: {query[:100]}...")
 
-        # Uruchom graf z callbackiem
-        result = await run_analysis_streaming(query, config, emit)
+        # Uruchom uproszczony flow MVP
+        result = await run_mvp_analysis(query, config, emit)
 
         # Zapisz wynik
         session.result = result

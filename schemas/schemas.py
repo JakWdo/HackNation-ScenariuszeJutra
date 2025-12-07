@@ -42,7 +42,6 @@ class CredibilityLevel(str, Enum):
     LOW = "low"
     SUSPICIOUS = "suspicious"
 
-
 class CredibilityScore(BaseModel):
     """Ocena wiarygodności źródła."""
     score: float = Field(..., description="0.0 to 1.0")

@@ -62,6 +62,7 @@ def search_vector_store(
             strategy=SearchStrategy.HYBRID
         )
 
+        logger.info(f"search_vector_store: {len(results)} wyników dla '{query[:50]}...', region={region}")
         return [r.to_dict() for r in results]
 
     except Exception as e:
